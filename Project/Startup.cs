@@ -1,3 +1,4 @@
+using MessagePack.AspNetCoreMvcFormatter;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -27,7 +28,12 @@ namespace Project
         public void ConfigureServices(IServiceCollection services)
         {
 
-            services.AddControllers();
+            services.AddControllers(options =>
+            {
+                // Add the MessagePack formatter
+                options.InputFormatters.Insert(0, new MessagePackInputFormatter());
+                options.OutputFormatters.Insert(0, new MessagePackOutputFormatter());
+            });
 
             services.AddSingleton<ResizePlugin>();
             services.AddSingleton<BlurPlugin>();

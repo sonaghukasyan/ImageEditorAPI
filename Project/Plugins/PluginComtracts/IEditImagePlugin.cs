@@ -7,6 +7,6 @@ namespace Project.Plugins.PluginComtracts
     {
         OperationType OperationType { get; }
 
-        byte[] ApplyOperation(byte[] image, object parameters);
+        byte[] ApplyOperation(byte[] image, byte[] parameters);
     }
 }

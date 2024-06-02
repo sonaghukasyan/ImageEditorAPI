@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Project.Managers.ServiceContracts;
 using Project.Models.RequestModels;
-using Project.Models.ResponseModels;
 using Project.Services.ServiceContracts;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -31,14 +30,26 @@ namespace Project.Services.Implementations
         {
             List<Task<byte[]>> tasks = new List<Task<byte[]>>();
 
-            foreach (EditImageRequestModel imageRequest in images)
+            try
             {
-                tasks.Add(_pluginManager.ApplyEdits(imageRequest.Image, imageRequest.Operations));
+                foreach (EditImageRequestModel imageRequest in images)
+                {
+                    if (imageRequest.Image != null && imageRequest.Operations != null)
+                    {
+                        tasks.Add(_pluginManager.ApplyEdits(imageRequest.Image, imageRequest.Operations));
+                    }
+                }
+
+                byte[][] results = await Task.WhenAll(tasks);
+
+                return results;
+            }
+            catch
+            {
+                //log
             }
 
-            byte[][] results = await Task.WhenAll(tasks);
-
-            return results;
+            return null;
         }
 
         #endregion

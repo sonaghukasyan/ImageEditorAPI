@@ -1,7 +1,11 @@
-﻿namespace Project.Models.PluginModels
+﻿using MessagePack;
+
+namespace Project.Models.PluginModels
 {
+    [MessagePackObject]
     public class BlurParameters
     {
-        public int Radius { get; set; }
+        [Key(0)]
+        public double Radius { get; set; }
     }
 }

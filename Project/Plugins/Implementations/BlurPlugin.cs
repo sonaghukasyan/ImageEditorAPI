@@ -1,4 +1,5 @@
-﻿using Project.Models.Enums;
+﻿using MessagePack;
+using Project.Models.Enums;
 using Project.Models.PluginModels;
 using Project.Plugins.PluginComtracts;
 
@@ -8,18 +9,25 @@ namespace Project.Plugins.Implementations
     {
         public OperationType OperationType => OperationType.Blur;
 
-        public byte[] ApplyOperation(byte[] image, object parameters)
+        public byte[] ApplyOperation(byte[] image, byte[] parameters)
         {
-            BlurParameters blurParameters = parameters as BlurParameters;
-
-            if(blurParameters != null)
+            try
             {
-                int radius = blurParameters.Radius;
+                BlurParameters blurParams = MessagePackSerializer.Deserialize<BlurParameters>(parameters);
 
-                //add asynchronous logic to edit the image size/ if so add async await 
-                //await blurImage(radius) --> ApplyOperation becomes async
-                byte[] editedImage = new byte[image.Length];
-                return editedImage;
+                if (blurParams != null)
+                {
+                    double effect = blurParams.Radius;
+
+                    //add asynchronous logic to edit the image size/ if so add async await 
+                    //await apply effect --> method becomes async
+                    byte[] editedImage = new byte[image.Length];
+                    return editedImage;
+                }
+            }
+            catch
+            {
+                //log
             }
 
             return null;

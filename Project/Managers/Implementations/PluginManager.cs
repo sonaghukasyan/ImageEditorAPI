@@ -31,13 +31,23 @@ namespace Project.Managers.Implementations
 
         public async Task<byte[]> ApplyEdits(byte[] image, List<Operation> operations)
         {
-            foreach (Operation operation in operations)
+            try
             {
-                if (_pluginServices.TryGetValue(operation.OperationType, out IEditImagePlugin editImagePlugin))
+                foreach (Operation operation in operations)
                 {
-                    //in reality should be awaited
-                    image = editImagePlugin.ApplyOperation(image, operation.Parameters);
+                    if (_pluginServices.TryGetValue(operation.OperationType, out IEditImagePlugin editImagePlugin))
+                    {
+                        if(operation.Parameters != null)
+                        {
+                            //in reality should be awaited
+                            image = editImagePlugin.ApplyOperation(image, operation.Parameters);
+                        }
+                    }
                 }
+            }
+            catch
+            {
+                //lof
             }
 
             return image;
